@@ -1,32 +1,20 @@
 package binary_search
 
-type IntSlice struct {
-	data []int
-}
-
-func (t IntSlice)BinarySearch1(k int) int{
-	return BinSearch1(t.data, 0, len(t.data)-1, k)
-}
-
-func (t IntSlice)BinarySearch2(k int) int{
-	return BinSearch2(t.data, 0, len(t.data)-1, k)
-}
-
-//非递归二分查找
-//返回查找到的位置,-1表示找不到或错误
-//时间复杂度O(logN)，空间复杂度O(1)
-func BinSearch1(arr []int, low, high, k int) int {
-	if low < 0 || high < 0 {
-		return -1
-	}
-	for low <= high {
-		mid := low + (high-low)>>1
-		if k < arr[mid] {
-			high = mid - 1
-		} else if k > arr[mid] {
-			low = mid + 1
-		} else {
+//  左闭右闭 [left, right]
+//	时间复杂度O(logN)，空间复杂度O(1)
+func BinarySearch(arr []int, target int) int{
+	left := 0
+	right := len(arr) - 1
+	for left <= right{
+		// 不用 mid = (left + right)/2 防止溢出
+		//mid := left + (right-left)>>1
+		mid := left + (right - left) / 2
+		if arr[mid] == target{
 			return mid
+		}else if arr[mid] < target{
+			left = mid + 1
+		}else if arr[mid] > target{
+			right = mid - 1
 		}
 	}
 	return -1
@@ -34,28 +22,65 @@ func BinSearch1(arr []int, low, high, k int) int {
 
 //递归二分查找
 //时间复杂度O(logN)，空间复杂度O(logN)
-func BinSearch2(arr []int, low, high, k int) int {
-	if low < 0 || high < 0 {
-		return -1
-	}
-	for low <= high {
-		mid := low + (high-low)>>1
-		if k < arr[mid] {
-			return BinSearch2(arr, low, mid-1, k)
-		} else if k > arr[mid] {
-			return BinSearch2(arr, mid+1, high, k)
-		} else {
+func BinarySearch2(arr []int, target int) int{
+	return binarySearch2(arr, 0, len(arr)-1, target)
+}
+
+func binarySearch2(arr []int, left, right, target int) int{
+	for left <= right{
+		mid := left + (right - left) >> 1
+		if arr[mid] == target{
 			return mid
+		}else if arr[mid] < target{
+			return binarySearch2(arr, mid+1, right, target)
+		}else if arr[mid] > target{
+			return binarySearch2(arr, left, mid-1, target)
 		}
 	}
 	return -1
 }
 
-//二分查找返回k第一次出现的下标
-func BinFirst(arr []int, low, high, k int) int {
-	if low < 0 || high < 0 {
+// 左侧边界
+func BinarySearchLeftBound(arr []int, target int) int{
+	left, right := 0, len(arr) - 1
+	for left <= right{
+		mid := left + (right-left) >> 2
+		if arr[mid] < target{
+			left = mid + 1
+		}else if arr[mid] > target{
+			right = mid - 1
+		}else if arr[mid] == target{
+			right = mid - 1
+		}
+	}
+	if left >= len(arr) || arr[left] != target{
 		return -1
 	}
+	return left
+}
+
+// 右侧边界
+func BinarySearchRightBound(arr []int, target int) int{
+	left, right := 0, len(arr) - 1
+	for left <= right{
+		mid := left + (right - left) >> 1
+		if arr[mid] == target{
+			left = mid + 1
+		}else if arr[mid] > target{
+			right = mid - 1
+		}else if arr[mid] < target{
+			left = mid + 1
+		}
+	}
+	if right < 0 || arr[right] != target{
+		return -1
+	}
+	return right
+}
+
+//二分查找返回k第一次出现的下标
+func BinFirst(arr []int, k int) int {
+	low, high := 0, len(arr)
 	for low < high {
 		mid := low + (high-low)>>1
 		if k > arr[mid] {
@@ -71,24 +96,16 @@ func BinFirst(arr []int, low, high, k int) int {
 }
 
 //二分查找返回k最后一次出现的下标
-func BinLast(arr []int, low, high, k int) int {
-	if low < 0 || high < 0 {
-		return -1
-	}
-	for low+1 < high {
+func BinLast(arr []int, k int) int {
+	low, high := 0, len(arr)
+	for low < high {
 		mid := low + (high-low)>>1
 		if k >= arr[mid] {
-			low = mid
+			low = mid + 1
 		} else {
-			high = mid - 1
+			high = mid
 		}
 	}
-	if arr[high] == k {
-		return high
-	} else if arr[low] == k {
-		return low
-	} else {
-		return -1
-	}
+	return low - 1
 }
 
