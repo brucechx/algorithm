@@ -44,7 +44,7 @@ func binarySearch2(arr []int, left, right, target int) int{
 func BinarySearchLeftBound(arr []int, target int) int{
 	left, right := 0, len(arr) - 1
 	for left <= right{
-		mid := left + (right-left) >> 2
+		mid := left + (right-left) >> 1
 		if arr[mid] < target{
 			left = mid + 1
 		}else if arr[mid] > target{

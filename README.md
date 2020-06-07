@@ -25,7 +25,6 @@
 - [kmp](doc/base/kmp.md)
 - [lru](doc/base/lru.md)
 - [top_n](doc/base/top_n.md)
-- [杨辉三角](doc/base/yang_hui.md)
 
 # 高级算法
 - [raft](doc/high/raft.md)

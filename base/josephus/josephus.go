@@ -46,10 +46,10 @@ func josephus2(n int,k int) int{
 	}
 }
 
-func josephus3(n, m int) int {
+func josephus3(n, k int) int {
 	p := 0
 	for i:=2; i<=n; i++{
-		p=(p+m)%i
+		p=(p+k)%i
 	}
 	return p
 }
